@@ -1,6 +1,6 @@
 # E-Commerce Data Dashboard
 
-![Logo](e-commerce_logo.png)
+![Logo](dashboard/e-commerce_logo.png)
 
 ## Table of Contents
 
@@ -15,20 +15,6 @@
 
 This project is a data analysis and visualization project focused on public e-commerce data. It includes code for **data wrangling**, **exploratory data analysis (EDA)**, and a **Streamlit dashboard** for interactive data exploration. The goal of this project is to analyze data from the **E-Commerce Public Dataset** and provide meaningful insights through visualizations.
 
-## Project Structure
-
-Here is the structure of the project:
-
-```
-E-Commerce Dashboard/
-│
-├── dashboard.py           # Main script to run the Streamlit application
-├── main_data.csv         # Dataset used for analysis
-├── e-commerce_logo.png    # Project logo
-├── README.md              # This documentation file
-└── requirements.txt       # List of required dependencies
-```
-
 ## Installation
 
 Follow these steps to install and run the application locally:
@@ -36,13 +22,13 @@ Follow these steps to install and run the application locally:
 1. **Clone this repository to your local machine:**
 
    ```bash
-   git clone https://github.com/username/e-commerce-dashboard.git
+   git clone https://github.com/AdrielFabianSuryoto/submission_dicoding.git
    ```
 
 2. **Navigate to the project directory:**
 
    ```bash
-   cd e-commerce-dashboard
+   cd dashboard
    ```
 
 3. **Install the required Python packages by running:**
