@@ -1,11 +1,17 @@
 # E-Commerce Data Dashboard
 
 ![Logo](dashboard/e-commerce_logo.png)
+![Screenshot 2024-10-03 041744](https://github.com/user-attachments/assets/871fe6b0-e003-4d9b-ade4-e12421328c44)
+![Screenshot 2024-10-03 041754](https://github.com/user-attachments/assets/a6ee60f1-8bd6-4e2c-acda-bed338e1bba5)
+![Screenshot 2024-10-03 041801](https://github.com/user-attachments/assets/1e3b1457-c208-4807-801f-48126b66cf4c)
+![Screenshot 2024-10-03 041812](https://github.com/user-attachments/assets/621b8199-bea5-440a-bf1a-bc39cafbce38)
+![Screenshot 2024-10-03 041826](https://github.com/user-attachments/assets/643ba6f3-5d0a-4190-a9fc-3fd4bdb560b5)
+![Screenshot 2024-10-03 041832](https://github.com/user-attachments/assets/227915fe-4412-420e-99fa-bab1bf701f6c)
+
 
 ## Table of Contents
 
 - [Overview](#overview)
-- [Project Structure](#project-structure)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Data Sources](#data-sources)
