@@ -1,6 +1,10 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy import stats
+import numpy as np
 
 # Load data
 file_path = 'main_data.csv'
@@ -94,19 +98,94 @@ fig_customer_state = px.bar(x=customer_by_state.index, y=customer_by_state.value
 fig_customer_state.update_layout(xaxis_title='State', yaxis_title='Number of Customers')
 st.plotly_chart(fig_customer_state)
 
-# 6. Best-Selling Products
-st.header("🏆 Best-Selling Products")
-if 'product_category_name_english' in filtered_data.columns:
-    product_sales = filtered_data.groupby('product_category_name_english').size().sort_values(ascending=False).head(10)
 
-    fig_product_sales = px.bar(x=product_sales.index, y=product_sales.values, 
-                               labels={'x': 'Product Category', 'y': 'Number of Sales'},
-                               title="Top 10 Best-Selling Products",
-                               color_discrete_sequence=px.colors.qualitative.Vivid)
-    fig_product_sales.update_layout(xaxis_title='Product Category', yaxis_title='Number of Sales', xaxis_tickangle=-45)
-    st.plotly_chart(fig_product_sales)
+# Question 1: Top 5 and Bottom 5 Sold Product Categories
+st.header("🏆 Top 5 and Bottom 5 Sold Product Categories")
+
+# Check if product category exists in the dataset
+if 'product_category_name_english' in filtered_data.columns:
+    product_sales = filtered_data.groupby('product_category_name_english').size().sort_values(ascending=False)
+
+    # Top 5 Best-Selling Products
+    top_5_best_selling = product_sales.head(5)
+
+    # Bottom 5 Lowest-Selling Products
+    bottom_5_lowest_selling = product_sales.tail(5)
+
+    # Create a horizontal bar chart
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+    # Plotting top 5
+    sns.barplot(y=top_5_best_selling.index, x=top_5_best_selling.values, ax=axes[0], palette='Blues_r')
+    axes[0].set_title('Top 5 Sold Products')
+    axes[0].set_xlabel('Total Sales')
+    axes[0].set_ylabel('Product Category')
+
+    # Plotting bottom 5
+    sns.barplot(y=bottom_5_lowest_selling.index, x=bottom_5_lowest_selling.values, ax=axes[1], palette='Oranges_r')
+    axes[1].set_title('Bottom 5 Sold Products')
+    axes[1].set_xlabel('Total Sales')
+    axes[1].set_ylabel('')
+
+    plt.tight_layout()
+    st.pyplot(fig)
+
+# Question 2: Average Customer Spending by State with Confidence Interval
+# Ensure payment_value and customer_unique_id columns exist in filtered_data
+if 'customer_state' in filtered_data.columns and 'price' in filtered_data.columns and 'customer_unique_id' in filtered_data.columns:
+    st.header("💰 Average Customer Spending by State")
+
+    # Estimate mean and confidence interval for customers in each state
+    customer_regions = filtered_data.groupby('customer_state').agg({
+        'price': ['mean', 'std'],  # 'price' column is used for payment value
+        'customer_unique_id': 'count'
+    }).reset_index()
+
+
+    
+    cis = stats.t.interval(
+        0.95, 
+        loc=customer_regions['price']['mean'], 
+        scale=customer_regions['price']['std'] / np.sqrt(customer_regions['customer_unique_id']['count']), 
+        df=customer_regions['customer_unique_id']['count'] - 1
+    )
+
+    # Add confidence interval columns
+    customer_regions['ci_low'] = cis[0]
+    customer_regions['ci_hi'] = cis[1]
+
+    # Function to adjust Matplotlib plot
+    def default_plot(ax, spines):
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.get_xaxis().tick_bottom()
+        ax.get_yaxis().tick_left()
+        ax.get_yaxis().set_tick_params(direction='out')
+        ax.get_xaxis().set_tick_params(direction='out')
+        for loc, spine in ax.spines.items():
+            if loc in spines:
+                spine.set_position(('outward', 10))
+        return ax
+
+    # Sort states for better visualization
+    plot = customer_regions.sort_values(by=('price', 'mean'))
+
+    # Plot mean transaction amounts with confidence intervals using Matplotlib
+    fig, ax = plt.subplots(figsize=(12, 6))
+    ax = default_plot(ax, ['left', 'bottom'])
+    plt.xticks(rotation=45)
+    plt.xlabel('State')
+    plt.ylabel('Mean Spending (95% CI)')
+    plt.scatter(plot['customer_state'], plot['price']['mean'], s=100, c=plot['price']['mean'])
+    plt.vlines(plot['customer_state'], plot['ci_low'], plot['ci_hi'], lw=0.5)
+    plt.title('Average Customer Spending by State with 95% Confidence Interval')
+    plt.tight_layout()
+
+    st.pyplot(fig)
+
 else:
-    st.write("Product category data not available.")
+    st.write("Data for customer state, price, or unique customer ID is not available.")
+
 
 
 st.markdown("**Developer:** Adriel Fabian Suryoto")  
